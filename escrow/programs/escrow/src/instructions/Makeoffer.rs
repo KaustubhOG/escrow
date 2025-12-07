@@ -43,5 +43,28 @@ pub struct MakeOffer<'info> {
     pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
-pub fn send_offered_token_vault() -> Result<()> {}
-pub fn save_offer() -> Result<()> {}
+ppub fn send_offered_tokens_to_vault(
+    context: &Context<MakeOffer>,
+    token_a_offered_amount: u64,
+) -> Result<()> {
+    transfer_tokens(
+        &context.accounts.maker_token_account_a,
+        &context.accounts.vault,
+        &token_a_offered_amount,
+        &context.accounts.token_mint_a,
+        &context.accounts.maker,
+        &context.accounts.token_program,
+    )
+}
+
+pub fn save_offer(context: Context<MakeOffer>, id: u64, token_b_wanted_amount: u64) -> Result<()> {
+    context.accounts.offer.set_inner(Offer {
+        id,
+        maker: context.accounts.maker.key(),
+        token_mint_a: context.accounts.token_mint_a.key(),
+        token_mint_b: context.accounts.token_mint_b.key(),
+        token_b_wanted_amount,
+        bump: context.bumps.offer,
+    });
+    Ok(())
+}
