@@ -29,4 +29,7 @@ pub mod swap {
         instructions::take_offer::send_wanted_tokens_to_maker(&context)?;
         instructions::take_offer::withdraw_and_close_vault(context)
     }
+    pub fn cancel_offer(ctx: Context<CancelOffer>) -> Result<()> {
+        refund_and_close_vault(ctx)
+    }
 }
